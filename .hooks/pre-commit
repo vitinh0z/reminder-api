@@ -1,0 +1,10 @@
+#!/bin/sh
+# Retrieve the Java files staged by the developer to re-add them later once they are formatted by Spotless.
+# (mvn spotless:apply applies changes to the disk and not to the staged files)
+STAGED_FILES=$(git diff --cached --name-only --diff-filter=d -- '*.java')
+
+if [ -z "$STAGED_FILES" ]; then
+    exit 0
+fi
+./mvnw spotless:apply
+git add $STAGED_FILES

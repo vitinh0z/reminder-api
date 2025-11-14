@@ -4,12 +4,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class ReminderApiApplicationTests
-{
+class ReminderApiApplicationTests {
 
-	@Test
-	void contextLoads()
-	{
-	}
-
+    @Test
+    void contextLoads() {}
 }

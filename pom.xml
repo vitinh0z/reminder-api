@@ -43,6 +43,14 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
+    <!-- Driver de conexão Postgres SQL
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>42.7.8</scope>
+        </dependency>
+        -->
+
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-devtools</artifactId>
@@ -52,7 +60,7 @@
     <dependency>
       <groupId>com.mysql</groupId>
       <artifactId>mysql-connector-j</artifactId>
-      <scope>runtime</scope>
+      <scope>9.4.0</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>

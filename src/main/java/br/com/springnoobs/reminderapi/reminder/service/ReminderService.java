@@ -37,9 +37,10 @@ public class ReminderService {
         Reminder reminder = new Reminder();
         BeanUtils.copyProperties(dto, reminder);
 
-        reminderSchedulerService.createSchedule(reminder);
+        Reminder savedReminder = repository.save(reminder);
+        reminderSchedulerService.createSchedule(savedReminder);
 
-        return ReminderMapper.toCreateReminderResponseDTO(repository.save(reminder));
+        return ReminderMapper.toCreateReminderResponseDTO(savedReminder);
     }
 
     public FindReminderByIdResponseDTO findById(Long id) {

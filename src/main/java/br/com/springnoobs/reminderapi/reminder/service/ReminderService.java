@@ -80,8 +80,8 @@ public class ReminderService {
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Reminder with ID: " + id + " not found"));
 
-        repository.deleteById(id);
-
         reminderSchedulerService.deleteSchedule(reminder);
+
+        repository.deleteById(id);
     }
 }

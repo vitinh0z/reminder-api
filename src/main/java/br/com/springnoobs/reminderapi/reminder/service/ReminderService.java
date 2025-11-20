@@ -37,9 +37,10 @@ public class ReminderService {
         Reminder reminder = new Reminder();
         BeanUtils.copyProperties(dto, reminder);
 
-        reminderSchedulerService.createSchedule(reminder);
+        Reminder savedReminder = repository.save(reminder);
+        reminderSchedulerService.createSchedule(savedReminder);
 
-        return ReminderMapper.toCreateReminderResponseDTO(repository.save(reminder));
+        return ReminderMapper.toCreateReminderResponseDTO(savedReminder);
     }
 
     public FindReminderByIdResponseDTO findById(Long id) {
@@ -62,14 +63,14 @@ public class ReminderService {
                 .orElseThrow(() -> new NotFoundException("Reminder with ID: " + id + " not found"));
 
         if (dto.remindAt().isBefore(Instant.now())) {
-            throw new IllegalArgumentException("RemindAt should be a date in the future!");
+            throw new PastRemindAtException("RemindAt should be a date in the future!");
         }
 
-        reminderSchedulerService.updateSchedule(reminder);
+        reminderSchedulerService.deleteSchedule(reminder);
 
         BeanUtils.copyProperties(dto, reminder);
 
-        reminderSchedulerService.deleteSchedule(reminder);
+        reminderSchedulerService.createSchedule(reminder);
 
         return ReminderMapper.toUpdateReminderResponseDTO(repository.save(reminder));
     }

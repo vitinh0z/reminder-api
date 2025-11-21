@@ -2,10 +2,7 @@ package br.com.springnoobs.reminderapi.reminder.service;
 
 import br.com.springnoobs.reminderapi.reminder.dto.request.CreateReminderRequestDTO;
 import br.com.springnoobs.reminderapi.reminder.dto.request.UpdateReminderRequestDTO;
-import br.com.springnoobs.reminderapi.reminder.dto.response.CreateReminderResponseDTO;
-import br.com.springnoobs.reminderapi.reminder.dto.response.FindAllReminderResponseDTO;
-import br.com.springnoobs.reminderapi.reminder.dto.response.FindReminderByIdResponseDTO;
-import br.com.springnoobs.reminderapi.reminder.dto.response.UpdateReminderResponseDTO;
+import br.com.springnoobs.reminderapi.reminder.dto.response.ReminderResponseDTO;
 import br.com.springnoobs.reminderapi.reminder.entity.Reminder;
 import br.com.springnoobs.reminderapi.reminder.exception.NotFoundException;
 import br.com.springnoobs.reminderapi.reminder.exception.PastRemindAtException;
@@ -29,7 +26,7 @@ public class ReminderService {
         this.reminderSchedulerService = reminderSchedulerService;
     }
 
-    public CreateReminderResponseDTO create(CreateReminderRequestDTO dto) {
+    public ReminderResponseDTO create(CreateReminderRequestDTO dto) {
         if (dto.remindAt().isBefore(Instant.now())) {
             throw new PastRemindAtException("RemindAt should be a date in the future!");
         }
@@ -40,24 +37,24 @@ public class ReminderService {
         Reminder savedReminder = repository.save(reminder);
         reminderSchedulerService.createSchedule(savedReminder);
 
-        return ReminderMapper.toCreateReminderResponseDTO(savedReminder);
+        return ReminderMapper.toResponse(savedReminder);
     }
 
-    public FindReminderByIdResponseDTO findById(Long id) {
+    public ReminderResponseDTO findById(Long id) {
         var reminder = repository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Reminder with ID: " + id + " not found"));
 
-        return ReminderMapper.toFindByIdResponseDTO(reminder);
+        return ReminderMapper.toResponse(reminder);
     }
 
-    public List<FindAllReminderResponseDTO> findAll(Pageable pageable) {
+    public List<ReminderResponseDTO> findAll(Pageable pageable) {
         return repository.findAllByOrderByRemindAtAsc(pageable).stream()
-                .map(ReminderMapper::toFindAllReminderResponseDTO)
+                .map(ReminderMapper::toResponse)
                 .toList();
     }
 
-    public UpdateReminderResponseDTO update(Long id, UpdateReminderRequestDTO dto) {
+    public ReminderResponseDTO update(Long id, UpdateReminderRequestDTO dto) {
         var reminder = repository
                 .findById(id)
                 .orElseThrow(() -> new NotFoundException("Reminder with ID: " + id + " not found"));
@@ -72,7 +69,7 @@ public class ReminderService {
 
         reminderSchedulerService.createSchedule(reminder);
 
-        return ReminderMapper.toUpdateReminderResponseDTO(repository.save(reminder));
+        return ReminderMapper.toResponse(repository.save(reminder));
     }
 
     public void delete(Long id) {

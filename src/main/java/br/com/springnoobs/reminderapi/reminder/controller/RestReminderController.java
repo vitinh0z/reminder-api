@@ -10,13 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 @RestController
 @RequestMapping("/reminders")
@@ -25,31 +23,13 @@ public class RestReminderController {
     public RestReminderController(ReminderService reminderService) {
         this.reminderService = reminderService;
     }
-
-//    // Exemplo de findAll retornando uma List
-//    @GetMapping
-//    public ResponseEntity<List<ReminderResponseDTO>>  findAll(
-//            @RequestParam(defaultValue = "0") int page,
-//            @RequestParam(defaultValue = "10") int size ) {
-//        Pageable pageable = PageRequest.of(page, size);
-//        return ResponseEntity.ok(reminderService.findAll(pageable));
-//    }
-
- // ABAIXO um exemplo de findAll com Page
- // O problema é que o terceiro argumento do construtor de PageImpl deveria representar o total geral de elementos no banco de dados e não o total de elementos listados. E não tenho essa informação vinda do service
- // Então se for para  retornar um Page, o ideal seria mudar o código no service para retornar um Page diretamente
 @GetMapping
 public ResponseEntity<Page<ReminderResponseDTO>> findAll(
         @RequestParam(defaultValue = "0") int page,
         @RequestParam(defaultValue = "10") int size) {
 
     Pageable pageable = PageRequest.of(page, size);
-    List<ReminderResponseDTO> reminderList = reminderService.findAll(pageable);
-    Page<ReminderResponseDTO> reminderPage = new PageImpl<>(
-            reminderList,
-            pageable,
-            reminderList.size() // Aqui o certo deveria ser o total geral de elementos no banco de dados
-    );
+    Page<ReminderResponseDTO> reminderPage = reminderService.findAll(pageable);
     return ResponseEntity.ok(reminderPage);
 }
 

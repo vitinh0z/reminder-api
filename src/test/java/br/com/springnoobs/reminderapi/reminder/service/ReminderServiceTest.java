@@ -14,7 +14,6 @@ import br.com.springnoobs.reminderapi.reminder.exception.PastRemindAtException;
 import br.com.springnoobs.reminderapi.reminder.repository.ReminderRepository;
 import br.com.springnoobs.reminderapi.reminder.scheduler.ReminderSchedulerService;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -45,8 +44,7 @@ class ReminderServiceTest {
     @Test
     void shouldReturnEmptyReminderPageWhenRepositoryIsEmpty() {
         // Arrange
-        when(repository.findAllByOrderByRemindAtAsc(any(Pageable.class)))
-                .thenReturn(Page.empty());
+        when(repository.findAllByOrderByRemindAtAsc(any(Pageable.class))).thenReturn(Page.empty());
 
         // Act
         Page<ReminderResponseDTO> reminderPage = service.findAll(Pageable.unpaged());
@@ -63,15 +61,14 @@ class ReminderServiceTest {
         reminder.setTitle("Title");
         reminder.setRemindAt(Instant.now().plusSeconds(60));
 
-        when(repository.findAllByOrderByRemindAtAsc(any(Pageable.class)))
-                .thenReturn(new PageImpl<>(List.of(reminder)));
+        when(repository.findAllByOrderByRemindAtAsc(any(Pageable.class))).thenReturn(new PageImpl<>(List.of(reminder)));
 
         // Act
         Page<ReminderResponseDTO> page = service.findAll(Pageable.unpaged());
 
         // Assert
         assertEquals(1, page.getTotalElements());
-        assertEquals("Title", page.getContent().get(0).title());
+        assertEquals("Title", page.getContent().getFirst().title());
     }
 
     @Test

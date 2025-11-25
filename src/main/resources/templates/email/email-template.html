@@ -1,10 +1,35 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-    <div>{{body}}</div>
+<body style="font-family: Arial, Helvetica, sans-serif; background-color:#f6f6f6; padding:20px;">
+<div style="max-width: 600px; margin: auto; background:white; padding:20px; border-radius:8px;">
+
+    <h2 style="color:#2c7be5; margin-top:0;">🔔 Notificação de Lembrete</h2>
+
+    <p>Olá <strong>{{name}}</strong>,</p>
+
+    <p>Este é um lembrete para o compromisso abaixo:</p>
+
+    <div style="background:#f1f3f5; padding:15px; border-radius:6px;">
+        <p style="margin:0;"><strong>Título:</strong> {{title}}</p>
+        <p style="margin:0;"><strong>Data do Lembrete:</strong> {{remind_at}}</p>
+    </div>
+
+    <p style="margin-top:20px;">
+        Caso já tenha resolvido esse lembrete, pode ignorar este e-mail. ou clique <a href="{{disable_notification_url}}" style="color:#2c7be5; text-decoration:none;">aqui</a> para desabilitar as notificações para esse lembrete
+    </p>
+
+    <p>
+        Atenciosamente,<br/>
+        <strong>Reminder API</strong>
+    </p>
+
+    <hr style="margin:30px 0; border:none; border-top:1px solid #ddd;" />
+
+    <p style="font-size:12px; color:#888;">
+        Você recebeu este e-mail porque habilitou lembretes na nossa aplicação.<br/>
+        Caso não reconheça este envio, entre em contato com o suporte.
+    </p>
+
+</div>
 </body>
 </html>

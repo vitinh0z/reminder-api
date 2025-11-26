@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/reminders")
-public class RestReminderController {
+public class ReminderController {
     private final ReminderService reminderService;
 
-    public RestReminderController(ReminderService reminderService) {
+    public ReminderController(ReminderService reminderService) {
         this.reminderService = reminderService;
     }
 

@@ -17,11 +17,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final UserRepository repository;
     private final ContactRepository contactRepository;
 
     public UserService(UserRepository userRepository, ContactRepository contactRepository) {
-        this.userRepository = userRepository;
+        this.repository = userRepository;
         this.contactRepository = contactRepository;
     }
 
@@ -34,7 +34,7 @@ public class UserService {
         user.setFirstName(dto.firstName());
         user.setLastName(dto.lastName());
 
-        User savedUser = userRepository.save(user);
+        User savedUser = repository.save(user);
 
         Contact contact = new Contact();
         contact.setEmail(dto.contactRequestDTO().email());
@@ -55,12 +55,12 @@ public class UserService {
     }
 
     public List<UserResponseDTO> findAll() {
-        List<User> users = userRepository.findAll();
+        List<User> users = repository.findAll();
         return UserMapper.toResponseList(users);
     }
 
     public void delete(Long id) {
-        User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found" + id));
-        userRepository.delete(user);
+        User user = repository.findById(id).orElseThrow(() -> new UserNotFoundException("User not found" + id));
+        repository.delete(user);
     }
 }

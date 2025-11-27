@@ -59,7 +59,7 @@ public class UserService {
         user.setFirstName(request.firstName());
         user.setLastName(request.lastName());
 
-        User savedUser = userRepository.save(user);
+        User savedUser = repository.save(user);
 
         Contact contact = new Contact();
         contact.setEmail(request.contactRequestDTO().email());

@@ -14,8 +14,6 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 public class ReminderExceptionHandler extends ResponseEntityExceptionHandler {
 
-    // Exceptions criadas em br.com.springnoobs.reminderapi.reminder.exception;
-
     private final Logger logger = LoggerFactory.getLogger(ReminderExceptionHandler.class);
 
     @ExceptionHandler(NotFoundException.class)

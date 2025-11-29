@@ -4,8 +4,8 @@ import br.com.springnoobs.reminderapi.reminder.dto.request.CreateReminderRequest
 import br.com.springnoobs.reminderapi.reminder.dto.request.UpdateReminderRequestDTO;
 import br.com.springnoobs.reminderapi.reminder.dto.response.ReminderResponseDTO;
 import br.com.springnoobs.reminderapi.reminder.entity.Reminder;
-import br.com.springnoobs.reminderapi.reminder.exception.DueDateException;
 import br.com.springnoobs.reminderapi.reminder.exception.NotFoundException;
+import br.com.springnoobs.reminderapi.reminder.exception.PastDueDateException;
 import br.com.springnoobs.reminderapi.reminder.mapper.ReminderMapper;
 import br.com.springnoobs.reminderapi.reminder.repository.ReminderRepository;
 import br.com.springnoobs.reminderapi.reminder.scheduler.ReminderSchedulerService;
@@ -28,7 +28,7 @@ public class ReminderService {
 
     public ReminderResponseDTO create(CreateReminderRequestDTO dto) {
         if (dto.dueDate().isBefore(Instant.now())) {
-            throw new DueDateException("DueDate should be a date in the future!");
+            throw new PastDueDateException("DueDate should be a date in the future!");
         }
 
         Reminder reminder = new Reminder();
@@ -58,7 +58,7 @@ public class ReminderService {
                 .orElseThrow(() -> new NotFoundException("Reminder with ID: " + id + " not found"));
 
         if (dto.dueDate().isBefore(Instant.now())) {
-            throw new DueDateException("DueDate should be a date in the future!");
+            throw new PastDueDateException("DueDate should be a date in the future!");
         }
 
         reminderSchedulerService.deleteSchedule(reminder);

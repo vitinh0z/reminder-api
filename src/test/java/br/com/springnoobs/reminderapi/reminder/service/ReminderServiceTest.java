@@ -107,14 +107,32 @@ class ReminderServiceTest {
 
     @Test
     void shouldCreateReminderWhenRequestIsValid() {
+        CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO(
+                "First Name", "Last Name", new ContactRequestDTO("email@test.com", "123456789"));
+
         // Arrange
         Instant dueDate = Instant.now().plusSeconds(60);
-        CreateReminderRequestDTO request = new CreateReminderRequestDTO("Create", dueDate);
+        CreateReminderRequestDTO request = new CreateReminderRequestDTO("Create", dueDate, createUserRequestDTO);
 
         Reminder reminder = new Reminder();
         reminder.setTitle(request.title());
         reminder.setDueDate(request.dueDate());
+
+        User user = new User();
+
+        user.setFirstName(createUserRequestDTO.firstName());
+        user.setLastName(createUserRequestDTO.lastName());
+
+        Contact contact = new Contact();
+        contact.setEmail(createUserRequestDTO.contactRequestDTO().email());
+        contact.setPhoneNumber(createUserRequestDTO.contactRequestDTO().phoneNumber());
+
+        user.setContact(contact);
+
+        reminder.setUser(user);
+
         when(repository.save(any())).thenReturn(reminder);
+        when(userService.createAndSaveUser(createUserRequestDTO)).thenReturn(user);
 
         // Act
         ReminderResponseDTO response = service.create(request);
@@ -129,7 +147,11 @@ class ReminderServiceTest {
     void shouldThrowDueDateExceptionWhenTryCreateReminderWithPastDueDate() {
         // Arrange
         Instant dueDate = Instant.now().minusSeconds(60);
-        CreateReminderRequestDTO request = new CreateReminderRequestDTO("Create", dueDate);
+
+        CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO(
+                "First Name", "Last Name", new ContactRequestDTO("email@test.com", "123456789"));
+
+        CreateReminderRequestDTO request = new CreateReminderRequestDTO("Create", dueDate, createUserRequestDTO);
 
         // Act And Assert
         assertThrows(PastDueDateException.class, () -> service.create(request));

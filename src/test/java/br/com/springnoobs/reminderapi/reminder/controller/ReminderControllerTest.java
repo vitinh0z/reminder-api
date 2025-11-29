@@ -16,6 +16,8 @@ import br.com.springnoobs.reminderapi.reminder.dto.response.ReminderResponseDTO;
 import br.com.springnoobs.reminderapi.reminder.exception.NotFoundException;
 import br.com.springnoobs.reminderapi.reminder.exception.PastDueDateException;
 import br.com.springnoobs.reminderapi.reminder.service.ReminderService;
+import br.com.springnoobs.reminderapi.user.dto.request.ContactRequestDTO;
+import br.com.springnoobs.reminderapi.user.dto.request.CreateUserRequestDTO;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.Instant;
 import java.util.List;
@@ -89,7 +91,10 @@ class ReminderControllerTest {
 
     @Test
     void shouldCreateReminderWhenRequestIsValid() throws Exception {
-        var request = new CreateReminderRequestDTO("New Reminder", Instant.now().plusSeconds(60));
+        CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO(
+                "First Name", "Last Name", new ContactRequestDTO("email@test.com", "123456789"));
+
+        var request = new CreateReminderRequestDTO("New Reminder", Instant.now().plusSeconds(60), createUserRequestDTO);
         var response = new ReminderResponseDTO(request.title(), request.dueDate());
 
         when(service.create(request)).thenReturn(response);
@@ -103,8 +108,11 @@ class ReminderControllerTest {
 
     @Test
     void shouldReturnBadRequestWhenCreatingReminderWithPastDate() throws Exception {
+        CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO(
+                "First Name", "Last Name", new ContactRequestDTO("email@test.com", "123456789"));
+
         var request =
-                new CreateReminderRequestDTO("Past Reminder", Instant.now().minusSeconds(60));
+                new CreateReminderRequestDTO("Past Reminder", Instant.now().minusSeconds(60), createUserRequestDTO);
 
         when(service.create(request)).thenThrow(new PastDueDateException("Remind at date must be in the future"));
 

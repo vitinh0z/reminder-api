@@ -1,6 +1,14 @@
 package br.com.springnoobs.reminderapi.reminder.entity;
 
-import jakarta.persistence.*;
+import br.com.springnoobs.reminderapi.user.entity.User;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.time.Instant;
 
 @Entity
@@ -21,6 +29,10 @@ public class Reminder {
     private Instant executedAt;
 
     private boolean sent = false;
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
 
     public Reminder() {}
 
@@ -95,5 +107,13 @@ public class Reminder {
 
     public void setDueDate(Instant dueDate) {
         this.dueDate = dueDate;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

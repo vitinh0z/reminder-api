@@ -231,4 +231,21 @@ class ReminderServiceTest {
         // Act And Assert
         assertThrows(NotFoundException.class, () -> service.delete(1L));
     }
+
+    @Test
+    void shouldRegisterCompleteExecutionWhenReminderIsValid() {
+        // Arrange
+        Reminder reminder = new Reminder();
+        reminder.setTitle("Any Title");
+
+        when(repository.save(reminder)).thenReturn(reminder);
+
+        // Act
+        service.registerReminderExecution(reminder);
+
+        // Assert
+        assertTrue(reminder.isSent());
+        assertNotNull(reminder.getExecutedAt());
+        verify(repository).save(reminder);
+    }
 }

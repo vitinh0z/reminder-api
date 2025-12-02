@@ -1,7 +1,6 @@
 package br.com.springnoobs.reminderapi.schedule.job;
 
 import br.com.springnoobs.reminderapi.mail.service.EmailService;
-import br.com.springnoobs.reminderapi.reminder.entity.Reminder;
 import br.com.springnoobs.reminderapi.reminder.repository.ReminderRepository;
 import br.com.springnoobs.reminderapi.reminder.service.ReminderService;
 import java.time.Instant;
@@ -32,17 +31,12 @@ public class ReminderJob extends QuartzJobBean {
     protected void executeInternal(JobExecutionContext context) {
         long reminderId = context.getMergedJobDataMap().getLong("reminder-id");
 
-        Reminder reminder =
-                reminderRepository.findByIdWithAssociations(reminderId).orElse(null);
+        reminderRepository.findByIdWithAssociations(reminderId).ifPresent(reminder -> {
+            emailService.send(reminder);
 
-        if (reminder == null) {
-            return;
-        }
+            reminderService.registerReminderExecution(reminder);
 
-        emailService.send(reminder);
-
-        reminderService.registerReminderExecution(reminder);
-
-        logger.info("Executed reminder {} at {}", reminder.getId(), Instant.now());
+            logger.info("Executed reminder {} at {}", reminder.getId(), Instant.now());
+        });
     }
 }

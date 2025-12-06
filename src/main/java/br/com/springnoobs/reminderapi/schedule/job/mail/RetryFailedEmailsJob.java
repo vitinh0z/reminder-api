@@ -44,11 +44,11 @@ public class RetryFailedEmailsJob implements Job {
 
             repository.delete(failure);
 
-            logger.info("Reenvio bem-sucedido do email para {}", failure.getEmail());
+            logger.info("Email resend successful to {}", failure.getEmail());
 
         } catch (EmailSendException e) {
 
-            logger.error("Falha ao reenviar email ID {}: {}", failure.getId(), e.getMessage());
+            logger.error("Failed to resend email ID {}: {}", failure.getId(), e.getMessage());
 
             failure.setRetryCount(failure.getRetryCount() + 1);
             failure.setErrorMessage(e.getMessage());

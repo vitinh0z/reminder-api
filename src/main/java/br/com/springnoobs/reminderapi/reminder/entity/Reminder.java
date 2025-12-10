@@ -30,8 +30,6 @@ public class Reminder {
 
     private boolean sent = false;
 
-    private Boolean emailEnabled = true; // por padrao, o envio por email é true
-
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -39,7 +37,7 @@ public class Reminder {
     public Reminder() {}
 
     public Reminder(Long id, String title, String description, Instant remindAt,
-                    Instant dueDate, Instant executedAt, boolean sent, Boolean emailEnabled)
+                    Instant dueDate, Instant executedAt, boolean sent)
     {
         this.id = id;
         this.title = title;
@@ -48,7 +46,6 @@ public class Reminder {
         this.dueDate = dueDate;
         this.executedAt = executedAt;
         this.sent = sent;
-        this.emailEnabled = emailEnabled;
     }
 
     public Long getId() {
@@ -113,13 +110,5 @@ public class Reminder {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Boolean getEmailEnabled() {
-        return emailEnabled;
-    }
-
-    public void setEmailEnabled(Boolean emailEnabled) {
-        this.emailEnabled = emailEnabled;
     }
 }

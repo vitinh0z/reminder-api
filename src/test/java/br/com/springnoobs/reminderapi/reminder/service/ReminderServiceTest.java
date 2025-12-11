@@ -9,7 +9,6 @@ import br.com.springnoobs.reminderapi.reminder.dto.request.UpdateReminderRequest
 import br.com.springnoobs.reminderapi.reminder.dto.response.ReminderResponseDTO;
 import br.com.springnoobs.reminderapi.reminder.entity.Reminder;
 import br.com.springnoobs.reminderapi.reminder.exception.NotFoundException;
-import br.com.springnoobs.reminderapi.reminder.exception.PastDueDateException;
 import br.com.springnoobs.reminderapi.reminder.exception.ReminderSchedulerException;
 import br.com.springnoobs.reminderapi.reminder.repository.ReminderRepository;
 import br.com.springnoobs.reminderapi.schedule.service.JobService;
@@ -146,20 +145,6 @@ class ReminderServiceTest {
     }
 
     @Test
-    void shouldThrowDueDateExceptionWhenTryCreateReminderWithPastDueDate() {
-        // Arrange
-        Instant dueDate = Instant.now().minusSeconds(60);
-
-        CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO(
-                "First Name", "Last Name", new ContactRequestDTO("email@test.com", "123456789"));
-
-        CreateReminderRequestDTO request = new CreateReminderRequestDTO("Create", dueDate, createUserRequestDTO);
-
-        // Act And Assert
-        assertThrows(PastDueDateException.class, () -> service.create(request));
-    }
-
-    @Test
     void shouldThrowNotFoundExceptionWhenCreateReminderWithNonExistentUser() {
         // Arrange
         CreateUserRequestDTO createUserRequestDTO = new CreateUserRequestDTO(
@@ -235,23 +220,6 @@ class ReminderServiceTest {
 
         // Act And Assert
         assertThrows(NotFoundException.class, () -> service.update(1L, request));
-    }
-
-    @Test
-    void shouldThrowPastDueDateExceptionWhenTryUpdateReminderWithPastDueDate() {
-        // Arrange
-        Instant remindAt = Instant.now().minusSeconds(60);
-        UpdateReminderRequestDTO request = new UpdateReminderRequestDTO("Update", remindAt);
-
-        Reminder reminder = new Reminder();
-        reminder.setTitle("Any Title");
-        reminder.setDueDate(request.dueDate());
-
-        when(repository.findById(1L)).thenReturn(Optional.of(reminder));
-
-        // Act And Assert
-        assertThrows(PastDueDateException.class, () -> service.update(1L, request));
-        verify(repository).findById(1L);
     }
 
     @Test

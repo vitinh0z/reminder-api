@@ -36,7 +36,7 @@ public class ReminderExceptionHandler extends ResponseEntityExceptionHandler {
 
     /*
      * Handles validation errors from annotations like @NotNull, @NotBlank, @Future, etc. Adding the error messages to the response body.
-     * Overriden because the default implementation does not include error messages in the response body.
+     * Overridden because the default implementation does not include error messages in the response body.
      */
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(

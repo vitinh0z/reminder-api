@@ -48,7 +48,7 @@ public class ReminderExceptionHandler extends ResponseEntityExceptionHandler {
 
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getDefaultMessage())
-                .collect(Collectors.joining());
+                .collect(Collectors.joining(", "));
 
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, errorMessage);
 

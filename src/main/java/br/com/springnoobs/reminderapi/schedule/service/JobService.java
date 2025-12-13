@@ -7,11 +7,7 @@ import jakarta.annotation.PostConstruct;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Date;
-import java.util.Optional;
-
 import org.quartz.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,9 +22,6 @@ public class JobService {
     private static final String RETRY_EMAIL_GROUP = "email-retry";
 
     private final Scheduler scheduler;
-
-    Logger logger = LoggerFactory.getLogger(JobService.class);
-
 
     public JobService(Scheduler scheduler) {
         this.scheduler = scheduler;

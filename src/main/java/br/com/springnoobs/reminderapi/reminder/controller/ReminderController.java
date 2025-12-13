@@ -52,10 +52,20 @@ public class ReminderController {
         return ResponseEntity.noContent().build();
     }
 
+    /*
+     * Desabilita notificações por email de um reminder.
+     * Remove todos os triggers agendados no Quartz.
+     *
+     * ToDo: Descomentar quando PR #96 (disableReminderNotifications) for mergeado
+     * Depende de: ReminderService. disableReminderNotifications()
+     */
+
+    /*
     @PatchMapping("/{id}/disable-email")
-    public ResponseEntity<ReminderResponseDTO> disableEmail (@PathVariable("id") Long id){
-        // TODO: Implementar lógica para desabilitar envio de e-mail no ReminderService
-        return ResponseEntity.ok(reminderService.findById(id));
+    public ResponseEntity<Void> disableEmail(@PathVariable Long id) throws SchedulerException {
+        reminderService.disableReminderNotifications(id);
+        return ResponseEntity.noContent().build();
     }
+    */
 
 }

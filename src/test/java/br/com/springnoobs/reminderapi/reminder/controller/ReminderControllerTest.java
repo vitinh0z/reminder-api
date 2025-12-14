@@ -12,7 +12,6 @@ import br.com.springnoobs.reminderapi.reminder.dto.request.CreateReminderRequest
 import br.com.springnoobs.reminderapi.reminder.dto.request.UpdateReminderRequestDTO;
 import br.com.springnoobs.reminderapi.reminder.dto.response.ReminderResponseDTO;
 import br.com.springnoobs.reminderapi.reminder.exception.NotFoundException;
-import br.com.springnoobs.reminderapi.reminder.exception.PastDueDateException;
 import br.com.springnoobs.reminderapi.reminder.exception.ReminderSchedulerException;
 import br.com.springnoobs.reminderapi.reminder.service.ReminderService;
 import br.com.springnoobs.reminderapi.user.dto.request.ContactRequestDTO;
@@ -120,12 +119,11 @@ class ReminderControllerTest {
         var request =
                 new CreateReminderRequestDTO("Past Reminder", Instant.now().minusSeconds(60), createUserRequestDTO);
 
-        when(service.create(request)).thenThrow(new PastDueDateException("Remind at date must be in the future"));
-
         mockMvc.perform(post("/reminders")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail").value("DueDate should be a date in the future!"))
                 .andDo(document("create-reminder-past-date"));
     }
 
@@ -170,13 +168,11 @@ class ReminderControllerTest {
         var request =
                 new UpdateReminderRequestDTO("Past Reminder", Instant.now().minusSeconds(60));
 
-        when(service.update(reminderId, request))
-                .thenThrow(new PastDueDateException("Remind at date must be in the future"));
-
         mockMvc.perform(put("/reminders/{id}", reminderId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.detail").value("DueDate should be a date in the future!"))
                 .andDo(document("update-reminder-past-date"));
     }
 

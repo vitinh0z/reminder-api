@@ -5,6 +5,7 @@ import br.com.springnoobs.reminderapi.reminder.dto.request.UpdateReminderRequest
 import br.com.springnoobs.reminderapi.reminder.dto.response.ReminderResponseDTO;
 import br.com.springnoobs.reminderapi.reminder.service.ReminderService;
 import jakarta.validation.Valid;
+import org.quartz.SchedulerException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -52,20 +53,10 @@ public class ReminderController {
         return ResponseEntity.noContent().build();
     }
 
-    /*
-     * Desabilita notificações por email de um reminder.
-     * Remove todos os triggers agendados no Quartz.
-     *
-     * ToDo: Descomentar quando PR #96 (disableReminderNotifications) for mergeado
-     * Depende de: ReminderService. disableReminderNotifications()
-     */
-
-    /*
     @PatchMapping("/{id}/disable-email")
     public ResponseEntity<Void> disableEmail(@PathVariable Long id) throws SchedulerException {
         reminderService.disableReminderNotifications(id);
         return ResponseEntity.noContent().build();
-    }
-    */
 
+    }
 }
